@@ -1,10 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PictureShareComponent from "../Components/PictureShareComponent";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../AuthProvider/AuthProvider";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { updateProfile } from "firebase/auth";
 
 export default function Register() {
   const { createUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -16,16 +20,43 @@ export default function Register() {
     const password = form.password.value;
     const file = form.file.value;
 
-    const user = {
-      name,
-      email,
-      password,
-      file,
-    };
 
     createUser(email, password)
       .then((result) => {
-        console.log(result);
+        const created_account = result.user.metadata.creationTime;
+        const last_login = result.user.metadata.lastSignInTime;
+
+        const user = {
+          name,
+          email,
+          created_account,
+          last_login,
+          file,
+        };
+
+        console.log(user);
+
+        updateProfile(result.user, {
+          displayName: name,
+          photoURL: file,
+        });
+
+        fetch("http://localhost:5000/users", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(user),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.insertedId) {
+              toast.success("SUCCESSFULLY REGISTERED");
+              form.reset();
+              navigate("/");
+              console.log(data);
+            }
+          });
       })
       .catch((error) => {
         console.log(error);
@@ -89,13 +120,13 @@ export default function Register() {
               <div className="form-control">
                 <label className="label">
                   <span className="label-text font-semibold font-secondFont">
-                    Choose your profile
+                 Photo URL
                   </span>
                 </label>
                 <input
-                  type="file"
+                  type="text"
                   placeholder="Photo"
-                  className="rounded-none"
+                  className=" input input-bordered rounded-none"
                   name="file"
                 />
               </div>

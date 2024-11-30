@@ -1,14 +1,28 @@
+import { useContext } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { AuthContext } from "../AuthProvider/AuthProvider";
+import { toast } from "react-toastify";
+import { AiOutlineLogout } from "react-icons/ai";
 
 export default function Header() {
-
+  const { logInUser, logOut } = useContext(AuthContext);
 
   const items = (
     <>
-      <NavLink to='/'>Home</NavLink>
-      <NavLink to='/dashboard'>Dashboard</NavLink>
+      <NavLink to="/">Home</NavLink>
+      <NavLink to="/dashboard">Dashboard</NavLink>
     </>
   );
+
+  const handleSignOut = () => {
+    logOut()
+      .then((result) => {
+        toast.success("SIGN OUT SUCCESSFULLY!");
+      })
+      .then((error) => {
+        toast.error(error.message);
+      });
+  };
 
   return (
     <div className="navbar bg-base-100 py-5 ">
@@ -42,15 +56,48 @@ export default function Header() {
         </Link>
       </div>
       <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1 gap-5 font-secondFont font-semibold">{items}</ul>
+        <ul className="menu menu-horizontal px-1 gap-5 font-secondFont font-semibold">
+          {items}
+        </ul>
       </div>
       <div className="navbar-end">
-        {/* <div className="avatar">
-          <div className="w-12 rounded-full">
-            <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-          </div>
-        </div> */}
-        <NavLink to='/login'>Log in</NavLink>
+        {logInUser ? (
+          <>
+            <div className="dropdown dropdown-end">
+              <div tabIndex={0} role="button" className="m-1">
+                <div className="avatar">
+                  <div className="w-12 rounded-full">
+                    <img src={logInUser.photoURL} />
+                  </div>
+                </div>
+              </div>
+              <ul
+                tabIndex={0}
+                className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
+              >
+                <li>
+                  <button onClick={handleSignOut}>
+                    Sign Out <AiOutlineLogout />
+                  </button>{" "}
+                </li>
+              </ul>
+            </div>
+
+            {/* {" "}
+            <button onClick={handleSignOut}>Sign Out</button>{" "}
+            <div className="avatar">
+              <div className="w-12 rounded-full">
+                <img src={logInUser.photoURL} />
+              </div>
+            </div>{" "} */}
+          </>
+        ) : (
+          <NavLink to="/login">
+            <button className="btn btn-sm bg-orange-500 rounded-none">
+              Log in
+            </button>
+          </NavLink>
+        )}
       </div>
     </div>
   );

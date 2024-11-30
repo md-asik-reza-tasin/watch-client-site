@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import { CgWebsite } from "react-icons/cg";
 import { FaRegUser } from "react-icons/fa";
 import { FaUserGroup } from "react-icons/fa6";
@@ -6,8 +7,13 @@ import { MdDashboard } from "react-icons/md";
 import { RiUserStarLine } from "react-icons/ri";
 import { TfiLayoutSliderAlt } from "react-icons/tfi";
 import { NavLink } from "react-router-dom";
+import { AuthContext } from "../AuthProvider/AuthProvider";
 
 export default function SideBarOfDashboard() {
+  const { logInUser } = useContext(AuthContext);
+
+  console.log(logInUser)
+
   const sideBar = (
     <>
       <NavLink
@@ -62,7 +68,7 @@ export default function SideBarOfDashboard() {
     <div className="bg-gray-800 text-white font-secondFont p-10">
       <div className="avatar flex items-center gap-6">
         <div className="w-20 rounded-full ring ring-offset-2 text-white">
-          <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+          <img src={logInUser?.file || logInUser?.photoURL} />
         </div>
         <p>Name</p>
       </div>

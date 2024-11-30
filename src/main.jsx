@@ -15,6 +15,8 @@ import Reviews from "./ComponentsOfDashboard/Reviews.jsx";
 import AuthProvider from "./AuthProvider/AuthProvider.jsx";
 import Login from "./Authentications/Login.jsx";
 import Register from "./Authentications/Register.jsx";
+import { ToastContainer } from "react-toastify";
+import PrivateRoute from "./AuthProvider/PrivateRoute.jsx";
 
 const router = createBrowserRouter([
   {
@@ -27,13 +29,17 @@ const router = createBrowserRouter([
       },
       {
         path: "register",
-        element: <Register></Register>
-      }
+        element: <Register></Register>,
+      },
     ],
   },
   {
     path: "/dashboard",
-    element: <Dashboard></Dashboard>,
+    element: (
+      <PrivateRoute>
+        <Dashboard></Dashboard>
+      </PrivateRoute>
+    ),
     children: [
       {
         path: "analytics",
@@ -67,6 +73,7 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
       <RouterProvider router={router}></RouterProvider>
+      <ToastContainer />
     </AuthProvider>
   </StrictMode>
 );
