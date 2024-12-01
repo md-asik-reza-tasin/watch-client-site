@@ -16,7 +16,12 @@ export default function AuthProvider({ children }) {
   const [logInUser, setLogInUser] = useState(null);
   const [allUsers, setAllUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+  const [google, setGoogle] = useState(null);
+  const [allItems, setAllItems] = useState([]);
+  const [addItem, setAddItem] = useState(null);
+  const [singleItem, setSingleItem] = useState(null);
+  const [photos, setPhotos] = useState([]);
+  const [updated, setUpdated] = useState(null);
 
   const googleProvider = new GoogleAuthProvider();
 
@@ -52,7 +57,19 @@ export default function AuthProvider({ children }) {
     fetch("http://localhost:5000/users")
       .then((res) => res.json())
       .then((data) => setAllUsers(data));
-  }, [logInUser]);
+  }, [logInUser, google]);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/items")
+      .then((res) => res.json())
+      .then((data) => setAllItems(data));
+  }, [addItem]);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/slider")
+      .then((res) => res.json())
+      .then((data) => setPhotos(data));
+  }, [updated]);
 
   console.log(logInUser);
   const info = {
@@ -64,6 +81,16 @@ export default function AuthProvider({ children }) {
     loading,
     setAllUsers,
     createAccountByGoogle,
+    setGoogle,
+    allItems,
+    setAllItems,
+    setAddItem,
+    singleItem,
+    setSingleItem,
+    photos,
+    setPhotos,
+    setUpdated,
+    updated,
   };
   return <AuthContext.Provider value={info}>{children}</AuthContext.Provider>;
 }

@@ -17,7 +17,7 @@ export default function SideBarOfDashboard() {
   const sideBar = (
     <>
       <NavLink
-        to="/dashboard/analytics"
+        to="/dashboard"
         className="flex items-center gap-3 my-5"
       >
         Dashboard{" "}
@@ -65,7 +65,7 @@ export default function SideBarOfDashboard() {
   );
 
   return (
-    <div className="bg-gray-800 text-white font-secondFont p-10">
+    <div className="bg-gray-800 text-white font-secondFont p-10 h-screen">
       <div className="avatar flex items-center gap-6">
         <div className="w-20 rounded-full ring ring-offset-2 text-white">
           <img src={logInUser?.file || logInUser?.photoURL} />

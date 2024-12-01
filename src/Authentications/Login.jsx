@@ -2,12 +2,13 @@ import { FcGoogle } from "react-icons/fc";
 import PictureShareComponent from "../Components/PictureShareComponent";
 import { FaGithub } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "../AuthProvider/AuthProvider";
 import { toast } from "react-toastify";
 
 export default function Login() {
-  const { logIn, createAccountByGoogle, allUsers } = useContext(AuthContext);
+  const { logIn, createAccountByGoogle, setGoogle, allUsers } =
+    useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -48,12 +49,13 @@ export default function Login() {
           body: JSON.stringify(userFromGoogle),
         })
           .then((res) => res.json())
-          .then((data) => console.log(data));
+          .then((data) => setGoogle(data));
       })
       .then((error) => {
         toast.error(error.message);
       });
   };
+
 
   return (
     <div>

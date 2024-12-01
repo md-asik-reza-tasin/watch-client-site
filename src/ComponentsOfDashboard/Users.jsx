@@ -23,7 +23,13 @@ export default function Users() {
   };
 
   return (
-    <div className="overflow-x-auto p-6">
+    <div
+      className="overflow-x-auto p-6"
+      style={{
+        maxHeight: "700px", // Set max height for vertical scrolling
+        overflowY: "auto", // Enable vertical scrolling
+      }}
+    >
       <h1 className="text-center mb-5 mt-5 font-secondFont font-semibold">
         ALL USERS INFORMATION
       </h1>

@@ -8,6 +8,7 @@ export default function Root() {
     <div className="w-[1150px] mx-auto">
       {location.pathname === "/dashboard" ? "" : <Header></Header>}
       <Outlet></Outlet>
+      
     </div>
   );
 }
