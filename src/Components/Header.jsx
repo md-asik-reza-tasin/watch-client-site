@@ -3,14 +3,17 @@ import { Link, NavLink } from "react-router-dom";
 import { AuthContext } from "../AuthProvider/AuthProvider";
 import { toast } from "react-toastify";
 import { AiOutlineLogout } from "react-icons/ai";
+import { FaMinus, FaPlus, FaShoppingCart } from "react-icons/fa";
 
 export default function Header() {
-  const { logInUser, logOut } = useContext(AuthContext);
+  const { logInUser, logOut, myItems } = useContext(AuthContext);
+
+  console.log(myItems);
 
   const items = (
     <>
       <NavLink to="/">Home</NavLink>
-      <NavLink to="/dashboard">Dashboard</NavLink>
+      {logInUser && <NavLink to="/dashboard">Dashboard</NavLink>}
     </>
   );
 
@@ -25,7 +28,7 @@ export default function Header() {
   };
 
   return (
-    <div className="navbar bg-base-100 py-5 ">
+    <div className="navbar bg-base-100 py-5 w-[1150px] mx-auto">
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -61,6 +64,64 @@ export default function Header() {
         </ul>
       </div>
       <div className="navbar-end">
+        <div>
+          <div className="drawer drawer-end mr-5">
+            <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
+            <div className="drawer-content">
+              {/* Page content here */}
+              <label htmlFor="my-drawer-4">
+                <div className="indicator">
+                  {myItems.length > 0 ? (
+                    <span className="indicator-item badge bg-red-500 text-white">
+                      {myItems.length}
+                    </span>
+                  ) : (
+                    <></>
+                  )}
+                  <FaShoppingCart className="size-10" />
+                </div>
+              </label>
+            </div>
+            <div className="drawer-side z-10">
+              <label
+                htmlFor="my-drawer-4"
+                aria-label="close sidebar"
+                className="drawer-overlay"
+              ></label>
+              <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4">
+                {/* Sidebar content here */}
+                <h1 className="text-center font-bold text-2xl p-5 italic">
+                  MY ADDED ITEMS
+                </h1>
+                {myItems.map((addItem) => (
+                  <div className="card card-side">
+                    <figure>
+                      <img
+                        src={addItem.image}
+                        className="w-24 ml-2"
+                        alt="Movie"
+                      />
+                    </figure>
+                    <div className="card-body">
+                      <h2 className="card-title">{addItem.watch}</h2>
+                      <div className="flex items-center mt-10 border">
+                        <p>
+                          <FaPlus></FaPlus>
+                        </p>
+                        <p className="text-orange-500 font-extrabold">
+                          {}
+                        </p>
+                        <p>
+                          <FaMinus></FaMinus>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
         {logInUser ? (
           <>
             <div className="dropdown dropdown-end">

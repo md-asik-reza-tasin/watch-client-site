@@ -7,8 +7,14 @@ import { toast } from "react-toastify";
 import { NavLink } from "react-router-dom";
 
 export default function MainDashBoard() {
-  const { allItems, setAllItems, allUsers, singleItem, setSingleItem } =
-    useContext(AuthContext);
+  const {
+    allItems,
+    setAllItems,
+    allUsers,
+    singleItem,
+    setSingleItem,
+    setUpdatedItem,
+  } = useContext(AuthContext);
   console.log(allItems);
 
   const handleDelete = (id) => {
@@ -31,6 +37,49 @@ export default function MainDashBoard() {
       .then((data) => {
         setSingleItem(data);
         console.log(data);
+      });
+  };
+
+  const handleSingleUpdate = (e) => {
+    e.preventDefault();
+
+    const form = e.target;
+
+    const watch = form.watchName.value;
+    const brand = form.brand.value;
+    const price = form.price.value;
+    const image = form.image.value;
+    const category = form.category.value;
+    const stock = form.stock.value;
+    const warranty = form.warranty.value;
+    const description = form.description.value;
+
+    console.log(e);
+
+    const itemInfo = {
+      watch,
+      brand,
+      price,
+      image,
+      category,
+      stock,
+      warranty,
+      description,
+    };
+
+    console.log(itemInfo);
+
+    fetch(`http://localhost:5000/items/${singleItem._id}`, {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(itemInfo),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        toast.success("UPDATED");
+        setUpdatedItem(data);
       });
   };
 
@@ -140,7 +189,7 @@ export default function MainDashBoard() {
                   <td>{item.watch}</td>
                   <td>{item.brand}</td>
                   <td>{item.category}</td>
-                  <td>{item.price}</td>
+                  <td className={`${item.price > 100 ? "text-orange-600 font-bold" : "text-black font-bold"}`}>${item.price}</td>
                   <td>{item.stock}</td>
                   <td>{item.warranty}</td>
                   <td onClick={() => handleDelete(item._id)}>
@@ -167,7 +216,7 @@ export default function MainDashBoard() {
           <div className="hero">
             <div className="hero-content flex-col lg:flex-row-reverse">
               <div className="card w-[900px]">
-                <form className="card-body">
+                <form onSubmit={handleSingleUpdate} className="card-body">
                   <div className="grid grid-cols-2 gap-10">
                     <div className="form-control">
                       <label className="label">
@@ -247,7 +296,7 @@ export default function MainDashBoard() {
                             value="In stock"
                             // defaultChecked={singleItem?.stock === "In stock"}
 
-                            checked={singleItem?.stock === "In stock"}
+                            defaultChecked={singleItem?.stock === "In stock"}
                           />{" "}
                           <p>In Stock</p>
                         </div>
@@ -257,7 +306,9 @@ export default function MainDashBoard() {
                             name="stock"
                             className="radio"
                             value="Out Of Stock"
-                            checked={singleItem?.stock === "Out Of Stock"}
+                            defaultChecked={
+                              singleItem?.stock === "Out Of Stock"
+                            }
                           />{" "}
                           <p>Out Of Stock</p>
                         </div>

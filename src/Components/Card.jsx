@@ -1,8 +1,16 @@
 import { useContext } from "react";
 import { AuthContext } from "../AuthProvider/AuthProvider";
+import { pushInArray } from "../localStorage";
 
 export default function Card() {
-  const { allItems } = useContext(AuthContext);
+  const { allItems, addToCartReload, setAddToCartReload } =
+    useContext(AuthContext);
+
+  const handleAddItem = (id) => {
+    pushInArray("id", id);
+    const add = [...addToCartReload, id];
+    setAddToCartReload(add);
+  };
 
   return (
     <>
@@ -11,18 +19,25 @@ export default function Card() {
       </h1>
       <div className="grid grid-cols-3 gap-10">
         {allItems.map((item) => (
-          <>
-            <div
-              onClick={() => document.getElementById("my_modal_4").showModal()}
-              className="card rounded-none w-full h-[480px] mb-10"
-            >
-              <figure>
+          <div key={item._id}>
+            <div className="card rounded-none w-full h-[480px] mb-10">
+              <figure
+                onClick={() =>
+                  document.getElementById("my_modal_4").showModal()
+                }
+              >
                 <img
                   className=" bg-slate-100 relative"
                   src={item.image}
                   alt="Shoes"
                 />
-                <p className="absolute left-0 bg-black opacity-50 font-thin text-sm px-1 text-white top-0">
+                <p
+                  className={`${
+                    item.stock === "Out Of Stock"
+                      ? "absolute left-0 bg-red-700 opacity-50 font-thin text-sm px-1 text-white top-0"
+                      : "absolute left-0 bg-black opacity-50 font-thin text-sm px-1 text-white top-0"
+                  }`}
+                >
                   {item.stock}
                 </p>
               </figure>
@@ -30,7 +45,10 @@ export default function Card() {
                 <h2 className="card-title text-gray-600">{item.watch}</h2>
                 <p className="text-xl mb-2 font-bold">${item.price}</p>
                 <div className="card-actions justify-start mt-5">
-                  <button className="bg-zinc-600 text-white w-28 h-12 hover:bg-black transition-colors duration-500">
+                  <button
+                    onClick={() => handleAddItem(item._id)}
+                    className="bg-zinc-600 text-white w-28 h-12 hover:bg-black transition-colors duration-500"
+                  >
                     ADD TO CART
                   </button>
                 </div>
@@ -58,7 +76,9 @@ export default function Card() {
                       <p className="pt-6 italic">{item.description}</p>
                       <div className="flex flex-col">
                         <p className="font-semibold">{item.warranty}</p>
-                        <p className="pb-5 mt-5 text-2xl text-gray-600 font-extrabold">${item.price}</p>
+                        <p className="pb-5 mt-5 text-2xl text-gray-600 font-extrabold">
+                          ${item.price}
+                        </p>
                       </div>
                       <button className="bg-zinc-600 text-white w-28 h-12 hover:bg-black transition-colors duration-500">
                         Buy
@@ -68,7 +88,7 @@ export default function Card() {
                 </div>
               </div>
             </dialog>
-          </>
+          </div>
         ))}
       </div>
     </>

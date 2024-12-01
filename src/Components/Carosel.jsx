@@ -28,18 +28,16 @@ export default function Carosel() {
         className="mySwiper "
       >
         {allItems.map((item) => (
-          <>
-            <SwiperSlide>
-              <div className="flex flex-col justify-evenly items-center my-20">
-                <img className="w-60 h-60" src={item.image} alt="" />
-                <h1 className="text-xl mt-5">{item.watch}</h1>
-                <Link>
-                  <h1 className="mt-5">BOOK NOW</h1>{" "}
-                  <FaArrowRight className="mx-auto mt-5" />
-                </Link>
-              </div>
-            </SwiperSlide>
-          </>
+          <SwiperSlide key={item._id}>
+            <div className="flex flex-col justify-evenly items-center my-20">
+              <img className="w-60 h-60" src={item.image} alt="" />
+              <h1 className="text-xl mt-5">{item.watch}</h1>
+              <Link>
+                <h1 className="mt-5">BOOK NOW</h1>{" "}
+                <FaArrowRight className="mx-auto mt-5" />
+              </Link>
+            </div>
+          </SwiperSlide>
         ))}
       </Swiper>
     </div>

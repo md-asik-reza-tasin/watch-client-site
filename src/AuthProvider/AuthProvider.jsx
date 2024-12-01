@@ -9,6 +9,7 @@ import {
 import { createContext, useEffect, useState } from "react";
 import { auth } from "../firebase.config";
 import { data } from "react-router-dom";
+import { getMyItem } from "../localStorage";
 
 export const AuthContext = createContext();
 
@@ -22,6 +23,9 @@ export default function AuthProvider({ children }) {
   const [singleItem, setSingleItem] = useState(null);
   const [photos, setPhotos] = useState([]);
   const [updated, setUpdated] = useState(null);
+  const [updatedItem, setUpdatedItem] = useState(null);
+  const [myItems, setMyItems] = useState([]);
+  const [addToCartReload, setAddToCartReload] = useState([]);
 
   const googleProvider = new GoogleAuthProvider();
 
@@ -63,13 +67,25 @@ export default function AuthProvider({ children }) {
     fetch("http://localhost:5000/items")
       .then((res) => res.json())
       .then((data) => setAllItems(data));
-  }, [addItem]);
+  }, [addItem, updatedItem]);
 
   useEffect(() => {
     fetch("http://localhost:5000/slider")
       .then((res) => res.json())
       .then((data) => setPhotos(data));
   }, [updated]);
+
+  useEffect(() => {
+    if (allItems.length) {
+      const total = [];
+      const myItemFromLocalStorage = getMyItem("id");
+      for (let id of myItemFromLocalStorage) {
+        const totalAddedItem = allItems.find((item) => item._id === id);
+        total.push(totalAddedItem);
+      }
+      setMyItems(total);
+    }
+  }, [addToCartReload, allItems]);
 
   console.log(logInUser);
   const info = {
@@ -91,6 +107,10 @@ export default function AuthProvider({ children }) {
     setPhotos,
     setUpdated,
     updated,
+    setUpdatedItem,
+    myItems,
+    setAddToCartReload,
+    addToCartReload,
   };
   return <AuthContext.Provider value={info}>{children}</AuthContext.Provider>;
 }
