@@ -1,15 +1,21 @@
 import { useContext } from "react";
 import { AuthContext } from "../AuthProvider/AuthProvider";
-import { pushInArray } from "../localStorage";
+import { getMyItem, pushInArray } from "../localStorage";
+import { toast } from "react-toastify";
 
 export default function Card() {
   const { allItems, addToCartReload, setAddToCartReload } =
     useContext(AuthContext);
 
   const handleAddItem = (id) => {
-    pushInArray("id", id);
-    const add = [...addToCartReload, id];
-    setAddToCartReload(add);
+    const check = getMyItem("id");
+    if (check.includes(id)) {
+      toast.info("ALREADY ADDED");
+    } else {
+      pushInArray("id", id);
+      const add = [...addToCartReload, id];
+      setAddToCartReload(add);
+    }
   };
 
   return (

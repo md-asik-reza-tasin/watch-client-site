@@ -5,6 +5,7 @@ import { CgArrowsExchangeAltV } from "react-icons/cg";
 import { MdDelete, MdOutlineWatch } from "react-icons/md";
 import { toast } from "react-toastify";
 import { NavLink } from "react-router-dom";
+import TotalOrderForAdmin from "./TotalOrderForAdmin";
 
 export default function MainDashBoard() {
   const {
@@ -15,7 +16,7 @@ export default function MainDashBoard() {
     setSingleItem,
     setUpdatedItem,
   } = useContext(AuthContext);
-  console.log(allItems);
+  // console.log(allItems);
 
   const handleDelete = (id) => {
     fetch(`http://localhost:5000/items/${id}`, {
@@ -36,7 +37,7 @@ export default function MainDashBoard() {
       .then((res) => res.json())
       .then((data) => {
         setSingleItem(data);
-        console.log(data);
+        // console.log(data);
       });
   };
 
@@ -54,7 +55,7 @@ export default function MainDashBoard() {
     const warranty = form.warranty.value;
     const description = form.description.value;
 
-    console.log(e);
+    // console.log(e);
 
     const itemInfo = {
       watch,
@@ -172,7 +173,7 @@ export default function MainDashBoard() {
             </thead>
             <tbody>
               {allItems.map((item, idx) => (
-                <tr>
+                <tr key={idx}>
                   <th>{idx + 1}</th>
                   <td>
                     <div className="flex items-center gap-3">
@@ -189,7 +190,15 @@ export default function MainDashBoard() {
                   <td>{item.watch}</td>
                   <td>{item.brand}</td>
                   <td>{item.category}</td>
-                  <td className={`${item.price > 100 ? "text-orange-600 font-bold" : "text-black font-bold"}`}>${item.price}</td>
+                  <td
+                    className={`${
+                      item.price > 100
+                        ? "text-orange-600 font-bold"
+                        : "text-black font-bold"
+                    }`}
+                  >
+                    ${item.price}
+                  </td>
                   <td>{item.stock}</td>
                   <td>{item.warranty}</td>
                   <td onClick={() => handleDelete(item._id)}>
@@ -360,6 +369,7 @@ export default function MainDashBoard() {
           </div>
         </div>
       </dialog>
+      <TotalOrderForAdmin></TotalOrderForAdmin>
     </div>
   );
 }

@@ -12,7 +12,7 @@ import { AuthContext } from "../AuthProvider/AuthProvider";
 export default function SideBarOfDashboard() {
   const { logInUser } = useContext(AuthContext);
 
-  console.log(logInUser)
+  // console.log(logInUser)
 
   const sideBar = (
     <>

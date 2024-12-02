@@ -1,14 +1,16 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { AuthContext } from "../AuthProvider/AuthProvider";
 import { toast } from "react-toastify";
 import { AiOutlineLogout } from "react-icons/ai";
 import { FaMinus, FaPlus, FaShoppingCart } from "react-icons/fa";
+import { getMyItem, pushInArray } from "../localStorage";
 
 export default function Header() {
-  const { logInUser, logOut, myItems } = useContext(AuthContext);
-
-  console.log(myItems);
+  const { logInUser, logOut, myItems, setMyItems, setLs } =
+    useContext(AuthContext);
+  const [total, setTotal] = useState(0);
+  // console.log(myItems);
 
   const items = (
     <>
@@ -27,6 +29,70 @@ export default function Header() {
       });
   };
 
+  const handlePlus = (id) => {
+    // const a = [...myItems];
+    setMyItems(() =>
+      myItems.map((item) =>
+        item._id === id
+          ? { ...item, quantity: parseInt(item.quantity) + 1 }
+          : item
+      )
+    );
+
+    console.log(myItems);
+  };
+
+  const handleMinus = (id) => {
+    const b = [...myItems];
+    setMyItems(
+      b.map((item) =>
+        item._id === id
+          ? { ...item, quantity: parseInt(item.quantity - 1) }
+          : item
+      )
+    );
+  };
+
+  useEffect(() => {
+    const totalResult = myItems.reduce(
+      (acc, item) => acc + item?.price * item?.quantity,
+      0
+    );
+
+    setTotal(totalResult);
+  }, [myItems]);
+
+  const handleDeleteFromLs = (id) => {
+    const remainningId = getMyItem("id");
+    const remain = remainningId.filter((item) => item !== id);
+    localStorage.setItem("id", JSON.stringify(remain));
+    setLs(remain);
+  };
+
+  //CONFIRM ORDER
+
+  const handleConfirmOrder = () => {
+    const order = {
+      userName: logInUser.email,
+      orderConfirmList: getMyItem('id')
+    };
+
+    fetch("http://localhost:5000/orders", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(order),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if(data.insertedId){
+          toast.success('CONFIRMATION ACCEPTED!')
+        }
+      });
+  };
+
+  console.log(myItems);
   return (
     <div className="navbar bg-base-100 py-5 w-[1150px] mx-auto">
       <div className="navbar-start">
@@ -93,31 +159,52 @@ export default function Header() {
                 <h1 className="text-center font-bold text-2xl p-5 italic">
                   MY ADDED ITEMS
                 </h1>
-                {myItems.map((addItem) => (
-                  <div className="card card-side">
+                <h1 className="text-center">TOTAL PRICES : {total}</h1>
+                {myItems.map((addItem, idx) => (
+                  <div key={idx} className="relative card card-side">
                     <figure>
                       <img
-                        src={addItem.image}
+                        src={addItem?.image}
                         className="w-24 ml-2"
                         alt="Movie"
                       />
                     </figure>
                     <div className="card-body">
-                      <h2 className="card-title">{addItem.watch}</h2>
-                      <div className="flex items-center mt-10 border">
+                      <h2 className="card-title">{addItem?.watch}</h2>
+                      <h1 className="font-semibold text-orange-500">
+                        ${addItem?.price * addItem?.quantity}
+                      </h1>
+                      <div className="flex items-center mt-10">
                         <p>
-                          <FaPlus></FaPlus>
+                          <FaPlus
+                            onClick={() =>
+                              addItem?.quantity < 10 && handlePlus(addItem._id)
+                            }
+                          ></FaPlus>
                         </p>
-                        <p className="text-orange-500 font-extrabold">
-                          {}
-                        </p>
+
+                        <p>{addItem?.quantity}</p>
+
                         <p>
-                          <FaMinus></FaMinus>
+                          <FaMinus
+                            onClick={() =>
+                              addItem?.quantity > 1 && handleMinus(addItem._id)
+                            }
+                          ></FaMinus>
                         </p>
                       </div>
                     </div>
+                    <p
+                      onClick={() => handleDeleteFromLs(addItem?._id)}
+                      className="absolute w-5 h-5 bg-red-600 opacity-80 rounded-full text-center right-0 top-0"
+                    >
+                      X
+                    </p>
                   </div>
                 ))}
+                <button onClick={handleConfirmOrder} className="btn btn-outline px-5 py-2 rounded-none">
+                  ORDER
+                </button>
               </ul>
             </div>
           </div>

@@ -26,6 +26,10 @@ export default function AuthProvider({ children }) {
   const [updatedItem, setUpdatedItem] = useState(null);
   const [myItems, setMyItems] = useState([]);
   const [addToCartReload, setAddToCartReload] = useState([]);
+  const [ls, setLs] = useState([]);
+  const [totalOrderedItems, setTotalOrderedItems] = useState([]);
+
+  // console.log(allUsers);
 
   const googleProvider = new GoogleAuthProvider();
 
@@ -51,6 +55,7 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     const unsubs = onAuthStateChanged(auth, (user) => {
       setLogInUser(user);
+      console.log(user);
       setLoading(false);
     });
 
@@ -85,9 +90,17 @@ export default function AuthProvider({ children }) {
       }
       setMyItems(total);
     }
-  }, [addToCartReload, allItems]);
+  }, [addToCartReload, allItems, ls]);
 
-  console.log(logInUser);
+  useEffect(() => {
+    fetch("http://localhost:5000/orders")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      });
+  }, []);
+
+  // console.log(logInUser);
   const info = {
     createUser,
     logIn,
@@ -111,6 +124,9 @@ export default function AuthProvider({ children }) {
     myItems,
     setAddToCartReload,
     addToCartReload,
+    setMyItems,
+    setLs,
+    totalOrderedItems,
   };
   return <AuthContext.Provider value={info}>{children}</AuthContext.Provider>;
 }

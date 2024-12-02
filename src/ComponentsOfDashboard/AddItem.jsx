@@ -32,10 +32,10 @@ export default function AddItem() {
       stock,
       warranty,
       description,
-      
+      quantity : 1
     };
 
-    console.log(itemInfo)
+    console.log(itemInfo);
 
     fetch("http://localhost:5000/items", {
       method: "POST",
@@ -169,6 +169,7 @@ export default function AddItem() {
                     placeholder="Description"
                   ></input>
                 </div>
+
 
                 <div className="form-control mt-6 col-span-2">
                   <button className="btn btn-neutral rounded-none">
