@@ -15,6 +15,7 @@ export default function MainDashBoard() {
     singleItem,
     setSingleItem,
     setUpdatedItem,
+    totalOrderedItems,
   } = useContext(AuthContext);
   // console.log(allItems);
 
@@ -148,76 +149,80 @@ export default function MainDashBoard() {
           </div>
         </div>
       </div>
-      <div className="px-5">
-        <div
-          className="overflow-x-auto"
-          style={{
-            maxHeight: "300px", // Set max height for vertical scrolling
-            overflowY: "auto", // Enable vertical scrolling
-          }}
-        >
-          <table className="table table-xs table-pin-rows table-pin-cols">
-            <thead>
-              <tr>
-                <th></th>
-                <td></td>
-                <td>Name</td>
-                <td>Brand</td>
-                <td>Category</td>
-                <td>Price</td>
-                <td>Stock</td>
-                <td>Warranty</td>
-                <td></td>
-                <td></td>
-              </tr>
-            </thead>
-            <tbody>
-              {allItems.map((item, idx) => (
-                <tr key={idx}>
-                  <th>{idx + 1}</th>
-                  <td>
-                    <div className="flex items-center gap-3">
-                      <div className="avatar">
-                        <div className="mask mask-squircle h-12 w-12">
-                          <img
-                            src={item.image}
-                            alt="Avatar Tailwind CSS Component"
-                          />
+      {allItems.length ? (
+        <div className="px-5">
+          <div
+            className="overflow-x-auto"
+            style={{
+              maxHeight: "300px", // Set max height for vertical scrolling
+              overflowY: "auto", // Enable vertical scrolling
+            }}
+          >
+            <table className="table table-xs table-pin-rows table-pin-cols">
+              <thead>
+                <tr>
+                  <th></th>
+                  <td></td>
+                  <td>Name</td>
+                  <td>Brand</td>
+                  <td>Category</td>
+                  <td>Price</td>
+                  <td>Stock</td>
+                  <td>Warranty</td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </thead>
+              <tbody>
+                {allItems.map((item, idx) => (
+                  <tr key={idx}>
+                    <th>{idx + 1}</th>
+                    <td>
+                      <div className="flex items-center gap-3">
+                        <div className="avatar">
+                          <div className="mask mask-squircle h-12 w-12">
+                            <img
+                              src={item.image}
+                              alt="Avatar Tailwind CSS Component"
+                            />
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </td>
-                  <td>{item.watch}</td>
-                  <td>{item.brand}</td>
-                  <td>{item.category}</td>
-                  <td
-                    className={`${
-                      item.price > 100
-                        ? "text-orange-600 font-bold"
-                        : "text-black font-bold"
-                    }`}
-                  >
-                    ${item.price}
-                  </td>
-                  <td>{item.stock}</td>
-                  <td>{item.warranty}</td>
-                  <td onClick={() => handleDelete(item._id)}>
-                    <MdDelete />
-                  </td>
-                  <td
-                    onClick={() => {
-                      document.getElementById("my_modal_4").showModal();
-                      handleSingleItem(item._id);
-                    }}
-                  >
-                    <CgArrowsExchangeAltV />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    </td>
+                    <td>{item.watch}</td>
+                    <td>{item.brand}</td>
+                    <td>{item.category}</td>
+                    <td
+                      className={`${
+                        item.price > 100
+                          ? "text-orange-600 font-bold"
+                          : "text-black font-bold"
+                      }`}
+                    >
+                      ${item.price}
+                    </td>
+                    <td>{item.stock}</td>
+                    <td>{item.warranty}</td>
+                    <td onClick={() => handleDelete(item._id)}>
+                      <MdDelete />
+                    </td>
+                    <td
+                      onClick={() => {
+                        document.getElementById("my_modal_4").showModal();
+                        handleSingleItem(item._id);
+                      }}
+                    >
+                      <CgArrowsExchangeAltV />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
+      ) : (
+        <h1 className="font-secondFont text-center mt-20">NO ITEM</h1>
+      )}
       <dialog id="my_modal_4" className="modal">
         <div className="modal-box w-11/12 max-w-5xl">
           <img className="w-20 mx-auto" src={singleItem?.image} alt="" />

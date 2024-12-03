@@ -7,9 +7,10 @@ import { FaMinus, FaPlus, FaShoppingCart } from "react-icons/fa";
 import { getMyItem, pushInArray } from "../localStorage";
 
 export default function Header() {
-  const { logInUser, logOut, myItems, setMyItems, setLs } =
+  const { logInUser, logOut, myItems, setMyItems, setLs, setTotal, total } =
     useContext(AuthContext);
-  const [total, setTotal] = useState(0);
+  const [allItemTotal, setAllItemTotal] = useState(0);
+
   // console.log(myItems);
 
   const items = (
@@ -72,10 +73,19 @@ export default function Header() {
   //CONFIRM ORDER
 
   const handleConfirmOrder = () => {
+    const idForOrderDataBase = myItems.map((item) => item._id);
+
+    console.log(logInUser);
+
+
     const order = {
       userName: logInUser.email,
-      orderConfirmList: getMyItem('id')
+      orderConfirmList: idForOrderDataBase,
+      totalPrice: total,
+      name: logInUser.displayName,
     };
+
+   
 
     fetch("http://localhost:5000/orders", {
       method: "POST",
@@ -86,13 +96,16 @@ export default function Header() {
     })
       .then((res) => res.json())
       .then((data) => {
-        if(data.insertedId){
-          toast.success('CONFIRMATION ACCEPTED!')
+        console.log(data);
+        if (data.insertedId || data.modifiedCount) {
+          toast.success("CONFIRMATION ACCEPTED!");
         }
       });
   };
 
-  console.log(myItems);
+  // console.log(myItems)
+
+  // console.log(myItems);
   return (
     <div className="navbar bg-base-100 py-5 w-[1150px] mx-auto">
       <div className="navbar-start">
@@ -202,7 +215,10 @@ export default function Header() {
                     </p>
                   </div>
                 ))}
-                <button onClick={handleConfirmOrder} className="btn btn-outline px-5 py-2 rounded-none">
+                <button
+                  onClick={handleConfirmOrder}
+                  className="btn btn-outline px-5 py-2 rounded-none"
+                >
                   ORDER
                 </button>
               </ul>

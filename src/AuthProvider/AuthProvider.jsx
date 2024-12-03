@@ -28,6 +28,7 @@ export default function AuthProvider({ children }) {
   const [addToCartReload, setAddToCartReload] = useState([]);
   const [ls, setLs] = useState([]);
   const [totalOrderedItems, setTotalOrderedItems] = useState([]);
+  const [total, setTotal] = useState(0);
 
   // console.log(allUsers);
 
@@ -96,7 +97,7 @@ export default function AuthProvider({ children }) {
     fetch("http://localhost:5000/orders")
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        setTotalOrderedItems(data);
       });
   }, []);
 
@@ -127,6 +128,8 @@ export default function AuthProvider({ children }) {
     setMyItems,
     setLs,
     totalOrderedItems,
+    total,
+    setTotal
   };
   return <AuthContext.Provider value={info}>{children}</AuthContext.Provider>;
 }
