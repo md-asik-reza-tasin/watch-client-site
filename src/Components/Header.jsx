@@ -9,7 +9,6 @@ import { getMyItem, pushInArray } from "../localStorage";
 export default function Header() {
   const { logInUser, logOut, myItems, setMyItems, setLs, setTotal, total } =
     useContext(AuthContext);
-  const [allItemTotal, setAllItemTotal] = useState(0);
 
   // console.log(myItems);
 
@@ -81,7 +80,6 @@ export default function Header() {
     const order = {
       userName: logInUser.email,
       orderConfirmList: idForOrderDataBase,
-      totalPrice: total,
       name: logInUser.displayName,
     };
 
@@ -231,7 +229,7 @@ export default function Header() {
               <div tabIndex={0} role="button" className="m-1">
                 <div className="avatar">
                   <div className="w-12 rounded-full">
-                    <img src={logInUser.photoURL} />
+                    <img title={logInUser?.displayName} referrerPolicy="no-referrer" src={logInUser?.photoURL} />
                   </div>
                 </div>
               </div>

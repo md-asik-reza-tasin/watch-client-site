@@ -31,7 +31,7 @@ export default function TotalOrderForAdmin() {
                 <td>{idx + 1}</td>
                 <td>{item.name}</td>
                 <td>{item.userName}</td>
-                <td>${item.totalPrice}</td>
+                <td>$ Coming soon</td>
                 <td>{item.orderConfirmList?.length}</td>
               </tr>
             ))}
