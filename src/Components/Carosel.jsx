@@ -13,7 +13,7 @@ export default function Carosel() {
   return (
     <div className="mt-20">
       <h1 className="text-center text-gray-400 font-secondFont text-5xl">
-        Find Things You'll Love
+        Find Watches You'll Love
       </h1>
       <Swiper
         slidesPerView={3}
