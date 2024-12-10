@@ -8,9 +8,7 @@ export default function Home() {
     <div>
       <SliderOfHome></SliderOfHome>
       <Carosel></Carosel>
-      <Card></Card>
-      <Jwt></Jwt>
-      
+      <Card></Card>  
     </div>
   );
 }
