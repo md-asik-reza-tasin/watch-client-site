@@ -9,6 +9,7 @@ export default function Home() {
       <SliderOfHome></SliderOfHome>
       <Carosel></Carosel>
       <Card></Card>  
+      <Jwt></Jwt>
     </div>
   );
 }
